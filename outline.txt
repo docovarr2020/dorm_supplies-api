@@ -1,0 +1,61 @@
+Users
+	All Users
+		id(-)
+		name(String)
+		isAdmin(Boolean)
+		email(String)
+		password(String)
+	Admins
+	Students
+		address(String)
+		classYear(String)
+		orders [{
+			items: [{
+				itemID: String,
+				quantity: Number,
+				price: Number
+			}],
+			purchasedDate: Date,
+			deliveredDate: Date,
+			isPaid: Boolean
+		}]
+
+Item
+	id(-)
+	name(String)
+	pic(String) // Stored as a url
+	description(String)
+	quantity(Number)
+	price(Number)
+	tags([String])
+
+Transaction
+	purchases([Order])
+	cost(Number)
+	paid(Boolean)
+	delivered(Boolean)
+
+Order
+	item_id(-)
+	quantity(Number)
+	price(Number)
+
+
+-------------------------------------------------------------------------------------------------
+
+Don't need a cart object
+	You only need backend memory for thins you want to have integrity.
+		Potential purchases aren't that important
+
+
+
+
+
+
+
+
+
+
+
+
+
