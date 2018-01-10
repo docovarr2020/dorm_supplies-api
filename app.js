@@ -20,8 +20,20 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Allows you to use the routes middleware
+// Allows you to use the 'routes' middleware
 app.use('/', routes)
+
+//  This will create a new error if you try to access a nonexistent route
+app.use((req, res, next) => {
+	const err = new Error('Not found')
+	err.status = 404
+	next(err)
+})
+
+app.use((err, req, res, next) => {
+	console.log(err)
+	return res.status(err.status || 500)
+})
 
 app.listen(config.port, function () {
     console.log('Example app listening on port 3000!')

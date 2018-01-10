@@ -21,37 +21,47 @@ exports.createItem = (req, res, next) => {
 	}
 	const newItem = new Item(itemData)
 	newItem.save((err) => {
-		if (err) return res.status(500).send('Could not create')
+		if (err) return next(err)
 		return res.json(newItem)
 	})
 }
 
-exports.getAllItems = (req, res) => {
+exports.getAllItems = (req, res, next) => {
 	Item.find({}, (err, items) => {
-		if (err) return res.status(500).send('Error: ' + err)
+		if (err) return next(err)
 		return res.json(items)
 	})
 }
 
-exports.getItemById = (req, res) => {
+exports.getItemById = (req, res, next) => {
 	Item.findById(req.params.itemId, (err, item) => {
-		if(err) return res.sendStatus(500).send('Error: ' + err)
+		if(err) return next(err)
 		if(!item) return res.sendStatus(404).send('No item with id ' + req.params.itemId)
 		return res.json(item)
 	})
 }
 
+// Gets all the items that are currently in stock
+exports.getStockedItems = (req, res, next) => {
+	Item.find({
+		$and: [
+			{ quantity: { $exists: true} },
+			{ quantity: { $gt: 0} }
+		]
+	})
+}
 
-exports.updateItem = (req, res) => {
+
+exports.updateItem = (req, res, next) => {
 	Item.findOneAndUpdate({ _id: req.params.itemId }, req.body, {}, (err, item) =>{
-		if(err) return res.sendStatus(500).send('Error: ' + err)
+		if(err) return next(err)
 		if(!item) return res.sendStatus(404).send('No item with id ' + req.params.itemId)
 		return res.json(item)
 	})
 }
-exports.deleteItem = (req, res) => {
+exports.deleteItem = (req, res, next) => {
 	Item.findByIdAndRemove(req.params.itemId, (err, item) => {
-		if(err) return res.sendStatus(500).send('Error: ' + err)
+		if(err) return next(err)
 		if(!item) return res.sendStatus(404).send('No item with id ' + req.params.itemId)
 		return res.json(item)
 	})
