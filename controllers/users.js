@@ -50,9 +50,13 @@ exports.createUser = (req, res, next) => {
 	if (!req.body.password) {
 		return res.status(400).send('Must provide valid password')
 	}
+	if (!req.body.address) {
+		return res.status(400).send('Must provide a delivery address')
+	}
 	const userData = {
 		email: req.body.email,
-		hash: req.body.password
+		hash: req.body.password,
+		address: req.body.address
 	}
 	const newUser = new User(userData)
 	newUser.save((err) => {
